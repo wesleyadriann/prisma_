@@ -3,6 +3,8 @@ import express from "express";
 import { accountController } from "./controllers/accountController.js";
 import { healthController } from "./controllers/healthController.js";
 
+import { exceptionMiddleware } from "./middlewares/exceptionMiddleware.js";
+
 import { logger } from "./utils/logger.js";
 
 (() => {
@@ -12,6 +14,8 @@ import { logger } from "./utils/logger.js";
 
   app.use(accountController);
   app.use(healthController);
+
+  app.use(exceptionMiddleware);
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => {
