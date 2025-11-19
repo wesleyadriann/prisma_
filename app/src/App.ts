@@ -1,7 +1,9 @@
 import express from "express";
 
 import { AccountController } from "./controllers/AccountController.js";
+import { AuthController } from "./controllers/AuthController.js";
 import { HealthController } from "./controllers/HealthController.js";
+import { prismaClient } from "./infrastructure/database.js";
 import { exceptionMiddleware } from "./middlewares/exceptionMiddleware.js";
 import { logger } from "./utils/logger.js";
 
@@ -16,9 +18,11 @@ export class App {
     this.registerMiddlewares();
     this.registerControllers();
     this.registerExepcetionMiddlewares();
+    this.startDatabaseConnection();
   }
 
   registerControllers() {
+    this.app.use(new AuthController().router);
     this.app.use(new AccountController().router);
     this.app.use(new HealthController().router);
   }
@@ -29,6 +33,10 @@ export class App {
 
   registerExepcetionMiddlewares() {
     this.app.use(exceptionMiddleware);
+  }
+
+  startDatabaseConnection() {
+    prismaClient.$connect();
   }
 
   listen() {

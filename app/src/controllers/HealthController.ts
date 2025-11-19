@@ -3,8 +3,9 @@ import { Router, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export class HealthController {
-  router = Router();
-  path = "/health";
+  public router = Router();
+
+  private path = "/health";
 
   constructor() {
     this.createRoutes();

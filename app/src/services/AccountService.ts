@@ -7,7 +7,7 @@ import { isEmail } from "../utils/email.js";
 import { logger } from "../utils/logger.js";
 
 export class AccountService {
-  async getAccounts() {
+  public async getAccounts() {
     logger.info("AccountService.getAccount - start");
 
     const result = await prismaClient.account.findMany();
@@ -16,19 +16,6 @@ export class AccountService {
       "AccountService.getAccount - retrieved " + result.length + " accounts",
     );
     logger.info("AccountService.getAccount - end");
-
-    return { data: result };
-  }
-
-  async createAccount(account: AccountDTO) {
-    logger.info("AccountService.createAccount - start");
-
-    const result = await prismaClient.account.create({ data: account });
-
-    logger.info(
-      "AccountService.createAccount - created account with id: " + result.id,
-    );
-    logger.info("AccountService.createAccount - end");
 
     return { data: result };
   }

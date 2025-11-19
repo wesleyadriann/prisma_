@@ -5,8 +5,9 @@ import { AccountService } from "../services/AccountService.js";
 
 export class AccountController {
   router = Router();
-  path = "/v1/account";
-  accountService: AccountService;
+
+  private path = "/v1/account";
+  private accountService: AccountService;
 
   constructor() {
     this.accountService = new AccountService();
@@ -15,7 +16,6 @@ export class AccountController {
 
   createRoutes() {
     this.router.get(this.path, this.getAccounts.bind(this));
-    this.router.post(this.path, this.createAccount.bind(this));
     this.router.get(this.path + "/:idOrEmail", this.getAccount.bind(this));
     this.router.delete(this.path + "/:id", this.deleteAccount.bind(this));
     this.router.patch(this.path + "/:id", this.updateAccount.bind(this));
@@ -23,12 +23,6 @@ export class AccountController {
 
   async getAccounts(_req: Request, response: Response) {
     const body = await this.accountService.getAccounts();
-
-    response.status(StatusCodes.OK).json(body);
-  }
-
-  async createAccount(request: Request, response: Response) {
-    const body = await this.accountService.createAccount(request.body);
 
     response.status(StatusCodes.OK).json(body);
   }
