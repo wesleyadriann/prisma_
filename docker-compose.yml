@@ -8,6 +8,12 @@ services:
     ports:
       - 5432:5432
 
+  queue:
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   adminer:
     image: adminer
     restart: always

@@ -1,11 +1,16 @@
 import bcrypt from "bcrypt";
 
 import { AccountDTO } from "../dto/accountDTO.js";
-import { prismaClient } from "../infrastructure/database.js";
+import { AccountRepository } from "../repositories/AccountRepository.js";
 import { logger } from "../utils/logger.js";
 
 export class AuthService {
   private readonly SALT_ROUNDS = 10;
+  private readonly accountRepository: AccountRepository;
+
+  constructor() {
+    this.accountRepository = AccountRepository();
+  }
 
   async createAccount(account: AccountDTO) {
     logger.info("AuthService.createAccount - start");
@@ -13,7 +18,7 @@ export class AuthService {
     const passwordHash = await this.encodePassword(account.password);
 
     const { password: _password, ...result } =
-      await prismaClient.account.create({
+      await this.accountRepository.create({
         data: { ...account, password: passwordHash },
       });
 

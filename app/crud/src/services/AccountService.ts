@@ -2,15 +2,21 @@ import { StatusCodes } from "http-status-codes";
 
 import { AccountDTO } from "../dto/accountDTO.js";
 import { Exception } from "../exceptions/Exception.js";
-import { prismaClient } from "../infrastructure/database.js";
+import { AccountRepository } from "../repositories/AccountRepository.js";
 import { isEmail } from "../utils/email.js";
 import { logger } from "../utils/logger.js";
 
 export class AccountService {
+  private accountRepository: AccountRepository;
+
+  constructor() {
+    this.accountRepository = AccountRepository();
+  }
+
   public async getAccounts() {
     logger.info("AccountService.getAccount - start");
 
-    const result = await prismaClient.account.findMany();
+    const result = await this.accountRepository.findMany();
 
     logger.info(
       "AccountService.getAccount - retrieved " + result.length + " accounts",
@@ -28,7 +34,7 @@ export class AccountService {
       : ["id", parseInt(idOrEmail, 10)];
 
     try {
-      const result = await prismaClient.account.findFirstOrThrow({
+      const result = await this.accountRepository.findFirstOrThrow({
         where: { [field]: value },
       });
 
@@ -46,7 +52,7 @@ export class AccountService {
 
     try {
       const idAsNumber = parseInt(id, 10);
-      const result = await prismaClient.account.delete({
+      const result = await this.accountRepository.delete({
         where: {
           id: idAsNumber,
         },
@@ -68,7 +74,7 @@ export class AccountService {
     logger.info("AccountService.updateAccount - start");
 
     const idAsNumber = parseInt(id, 10);
-    const result = await prismaClient.account.update({
+    const result = await this.accountRepository.update({
       where: {
         id: idAsNumber,
       },
